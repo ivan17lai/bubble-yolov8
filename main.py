@@ -1,5 +1,9 @@
+# v0.1.1
+# 針對有人很小的問題進行修復
+
 import cv2
 from ultralytics import YOLO
+
 
 # 載入模型
 model = YOLO('yolov8n.pt')
@@ -13,6 +17,8 @@ cap = cv2.VideoCapture(video_path)
 while cap.isOpened():
 
     success, frame = cap.read()
+
+    width_center = frame.shape[1] / 2
 
     if success:
 
@@ -56,7 +62,7 @@ while cap.isOpened():
                 cv2.line(frame, (960, 1070), (middle_x, middle_y), (255, 255, 255), 10)
 
                 # 計算和中心點的偏移量
-                move = 960 - middle_x
+                move = width_center - middle_x
                 print(move)
 
                 cv2.putText(frame, str(move), (middle_x, middle_y), cv2.FONT_HERSHEY_SIMPLEX, 6, (255, 255, 255), 10, cv2.LINE_AA)
