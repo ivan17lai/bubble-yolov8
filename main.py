@@ -18,6 +18,7 @@ while cap.isOpened():
 
     success, frame = cap.read()
 
+    # 根據不同設備像素設定中心點
     width_center = frame.shape[1] / 2
 
     if success:
