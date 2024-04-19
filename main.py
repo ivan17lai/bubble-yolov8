@@ -17,7 +17,6 @@ cap = cv2.VideoCapture(video_path)
 while cap.isOpened():
 
     success, frame = cap.read()
-    frame = cv2.resize(frame, (720, 480))
 
     # 根據不同設備像素設定中心點
     camera_width = frame.shape[1]
