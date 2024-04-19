@@ -1,4 +1,4 @@
-# v0.1.1
+# v0.1.1B
 # 針對有人很小的問題進行修復
 
 import cv2
@@ -17,9 +17,17 @@ cap = cv2.VideoCapture(video_path)
 while cap.isOpened():
 
     success, frame = cap.read()
+    frame = cv2.resize(frame, (720, 480))
 
     # 根據不同設備像素設定中心點
-    width_center = frame.shape[1] / 2
+    camera_width = frame.shape[1]
+    camera_height = frame.shape[0]
+    
+    width_center = camera_width / 2
+    
+
+    print(width_center)
+    print(camera_height-50)
 
     if success:
 
@@ -59,8 +67,8 @@ while cap.isOpened():
 
             # 判斷是否是第一個看到的人 如果不是就不會追蹤
             if(box_id == 0):
-
-                cv2.line(frame, (960, 1070), (middle_x, middle_y), (255, 255, 255), 10)
+                
+                cv2.line(frame, ( int(width_center), int(camera_height-50) ), (middle_x, middle_y), (255, 255, 255), 10)
 
                 # 計算和中心點的偏移量
                 move = width_center - middle_x
