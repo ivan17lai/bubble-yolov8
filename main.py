@@ -1,8 +1,9 @@
-# v0.1.1B
-# 針對有人很小的問題進行修復
+# v0.1.2
+# add fps display、cap.grab
 
 import cv2
 from ultralytics import YOLO
+import time
 
 
 # 載入模型
@@ -13,8 +14,12 @@ model.classes = [0]  # Assuming class 0 is your target
 video_path = 0
 cap = cv2.VideoCapture(video_path)
 
+start_time = 0
+
 
 while cap.isOpened():
+
+    start_time = time.time()
 
     success, frame = cap.read()
 
@@ -23,10 +28,7 @@ while cap.isOpened():
     camera_height = frame.shape[0]
     
     width_center = camera_width / 2
-    
 
-    print(width_center)
-    print(camera_height-50)
 
     if success:
 
@@ -62,6 +64,7 @@ while cap.isOpened():
             middle_y = int(box[1])
             # 取出寬度
             width = int(box[2])
+            height = int(box[3])
 
 
             # 判斷是否是第一個看到的人 如果不是就不會追蹤
@@ -73,12 +76,14 @@ while cap.isOpened():
                 move = width_center - middle_x
                 print(move)
 
-                cv2.putText(frame, str(move), (middle_x, middle_y), cv2.FONT_HERSHEY_SIMPLEX, 6, (255, 255, 255), 10, cv2.LINE_AA)
+                cv2.putText(frame, str(int(move)), (middle_x, middle_y), cv2.FONT_HERSHEY_SIMPLEX, 6, (255, 255, 255), 20, cv2.LINE_AA)
 
 
                 # move代表偏移量 可以用他來調整速度
 
-                if move >= 0:
+
+                #簡易模式
+                if move >=  0:
                     # 人在左邊的程式
                     # 這裡放人在左邊的程式
                     print('left')
@@ -89,18 +94,23 @@ while cap.isOpened():
                     print('right')
 
 
-                cv2.circle(frame, (middle_x, middle_y), int(width/2), (255, 255, 255), 20)
+                cv2.circle(frame, (middle_x, middle_y), int(height/2), (255, 255, 255), 20)
                 box_id += 1
             else:
-                cv2.circle(frame, (middle_x, middle_y), int(width/2), (255, 255, 255), 10)
+                pass
+                #cv2.circle(frame, (middle_x, middle_y), int(height/2), (255, 255, 255), 10)
 
-
+        fps = 1/(time.time() - start_time)
+        cv2.putText(frame, str(fps), (20,30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
         cv2.imshow("YOLOv8 Tracking", frame)
 
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
-    else:
-        break
+
+    cap.grab()
+
+
+    
 
 cap.release()
 cv2.destroyAllWindows()
