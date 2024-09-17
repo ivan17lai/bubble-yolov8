@@ -1,4 +1,4 @@
-# bubbleSearch-yolov8
+# bubble-yolov8
 
 ## setup
 ```
